@@ -17,7 +17,7 @@ namespace Memo.Views
     /// <summary>
     /// ToDoView.xaml 的交互逻辑
     /// </summary>
-    public partial class ToDoView : Window
+    public partial class ToDoView : UserControl
     {
         public ToDoView()
         {

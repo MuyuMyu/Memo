@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Memo.Common.Models
 {
     /// <summary>
-    /// 任务栏
+    /// IndexViex任务栏
     /// </summary>
     public class TaskBar : BindableBase
     {

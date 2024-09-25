@@ -79,15 +79,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\AppSession.cs" />
+    <Compile Include="Common\Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Common\Converters\IntToBoolConveter.cs" />
+    <Compile Include="Common\Converters\IntToVisibilityConveter.cs" />
     <Compile Include="Extensions\DialogExtensions.cs" />
     <Compile Include="Extensions\PassWorldExtensions.cs" />
     <Compile Include="Extensions\PrismManager.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\IndexViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MemoViewModel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ToDoViewModel.cs" />
     <Compile Include="Views\IndexView.xaml.cs">
@@ -112,10 +114,6 @@
     <Compile Include="Views\ToDoView.xaml.cs">
       <DependentUpon>ToDoView.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\IndexView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

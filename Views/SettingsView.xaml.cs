@@ -17,7 +17,7 @@ namespace Memo.Views
     /// <summary>
     /// SettingsView.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingsView : Window
+    public partial class SettingsView : UserControl
     {
         public SettingsView()
         {
