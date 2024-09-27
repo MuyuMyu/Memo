@@ -61,9 +61,16 @@ namespace Memo.Views
             ColorZone.MouseDoubleClick += (s, e) =>
             {
                 if (this.WindowState == WindowState.Normal)
+                {
                     this.WindowState = WindowState.Maximized;
+                    btnMax.Content = "❐";
+                }
                 else
+                {
                     this.WindowState = WindowState.Normal;
+                    btnMax.Content = "☐";
+                }
+                    
             };
 
             menuBar.SelectionChanged += (s, e) =>

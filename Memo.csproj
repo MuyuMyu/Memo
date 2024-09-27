@@ -83,6 +83,8 @@
     <Compile Include="Common\Converters\ColorToBrushConverter.cs" />
     <Compile Include="Common\Converters\IntToBoolConveter.cs" />
     <Compile Include="Common\Converters\IntToVisibilityConveter.cs" />
+    <Compile Include="Common\Models\MemoDto.cs" />
+    <Compile Include="Common\Models\ToDoDto.cs" />
     <Compile Include="Extensions\DialogExtensions.cs" />
     <Compile Include="Extensions\PassWorldExtensions.cs" />
     <Compile Include="Extensions\PrismManager.cs" />
@@ -91,7 +93,11 @@
     <Compile Include="ViewModels\MemoViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\SkinViewModel.cs" />
     <Compile Include="ViewModels\ToDoViewModel.cs" />
+    <Compile Include="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\IndexView.xaml.cs">
       <DependentUpon>IndexView.xaml</DependentUpon>
     </Compile>
@@ -111,9 +117,16 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SkinView.xaml.cs">
+      <DependentUpon>SkinView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ToDoView.xaml.cs">
       <DependentUpon>ToDoView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\IndexView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SkinView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -167,6 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\yun.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\wind.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets')" />

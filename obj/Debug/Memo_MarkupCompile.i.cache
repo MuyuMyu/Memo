@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\MyProject\Memo\App.xaml
-5-2065801737
+7-2065796761
 
-26-1718904991
+31881927563
 21-746105939
-Views\IndexView.xaml;Views\MainView.xaml;Views\MemoView.xaml;Views\SettingsView.xaml;Views\ToDoView.xaml;
+Views\AboutView.xaml;Views\IndexView.xaml;Views\MainView.xaml;Views\MemoView.xaml;Views\SettingsView.xaml;Views\SkinView.xaml;Views\ToDoView.xaml;
 
 True
 

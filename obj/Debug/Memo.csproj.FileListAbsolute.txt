@@ -43,3 +43,7 @@ E:\MyProject\Memo\obj\Debug\Views\MemoView.baml
 E:\MyProject\Memo\obj\Debug\Views\SettingsView.baml
 E:\MyProject\Memo\obj\Debug\Views\ToDoView.baml
 E:\MyProject\Memo\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\MyProject\Memo\obj\Debug\Views\SkinView.g.cs
+E:\MyProject\Memo\obj\Debug\Views\SkinView.baml
+E:\MyProject\Memo\obj\Debug\Views\AboutView.g.cs
+E:\MyProject\Memo\obj\Debug\Views\AboutView.baml

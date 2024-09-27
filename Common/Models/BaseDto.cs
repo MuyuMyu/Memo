@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Memo.Common.Models
 {
+
     public class BaseDto
     {
         private int id;

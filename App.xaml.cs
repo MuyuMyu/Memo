@@ -25,6 +25,8 @@ namespace Memo
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
 
+            containerRegistry.RegisterForNavigation<AboutView>();
+            containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();
             containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>();
             containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>();
