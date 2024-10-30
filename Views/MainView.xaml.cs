@@ -34,7 +34,7 @@ namespace Memo.Views
             {
                 Snackbar.MessageQueue.Enqueue(arg);
             });
-
+                
             //注册等待消息窗口
             aggregator.Resgiter(arg =>
             {

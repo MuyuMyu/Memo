@@ -63,29 +63,29 @@ namespace Memo
         /// 应用程序初始化时调用此方法，用于显示登录对话框。
         /// 如果用户未成功登录，程序将退出。
         /// </summary>
-        protected override void OnInitialized()
-        {
-            // 显示登录对话框
-            var dialog = Container.Resolve<IDialogService>();
-            dialog.ShowDialog("LoginView", callback =>
-            {
-                // 如果登录失败，退出程序
-                if (callback.Result != ButtonResult.OK)
-                {
-                    Environment.Exit(0);
-                    return;
-                }
+        //protected override void OnInitialized()
+        //{
+        //    // 显示登录对话框
+        //    var dialog = Container.Resolve<IDialogService>();
+        //    dialog.ShowDialog("LoginView", callback =>
+        //    {
+        //        // 如果登录失败，退出程序
+        //        if (callback.Result != ButtonResult.OK)
+        //        {
+        //            Environment.Exit(0);
+        //            return;
+        //        }
 
-                // 登录成功后，配置主窗口的数据上下文
-                var service = App.Current.MainWindow.DataContext as IConfigureService;
-                if (service != null)
-                    service.Configure();
+        //        // 登录成功后，配置主窗口的数据上下文
+        //        var service = App.Current.MainWindow.DataContext as IConfigureService;
+        //        if (service != null)
+        //            service.Configure();
 
-                // 调用父类的初始化方法
-                base.OnInitialized();
-            });
+        //        // 调用父类的初始化方法
+        //        base.OnInitialized();
+        //    });
 
-        }
+        //}
 
         /// <summary>
         /// 用于注册应用程序中的服务、视图模型和视图到容器中。
@@ -111,6 +111,7 @@ namespace Memo
             // 注册导航视图和视图模型，用于应用程序的导航
             containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
             containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
+            //containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<AboutView>();
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();

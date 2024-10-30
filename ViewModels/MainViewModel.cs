@@ -37,6 +37,8 @@ namespace Memo.ViewModels
             MenuBars = new ObservableCollection<MenuBar>(); // 初始化菜单栏集合
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate); // 初始化导航命令
 
+            CreateMenuBar();
+
             // 初始化后退和前进命令
             GoBackCommand = new DelegateCommand(() =>
             {
@@ -102,6 +104,9 @@ namespace Memo.ViewModels
             MenuBars.Add(new MenuBar() { Icon = "NotebookOutline", Title = "待办事项", NameSpace = "ToDoView" });
             MenuBars.Add(new MenuBar() { Icon = "NotebookPlus", Title = "备忘录", NameSpace = "MemoView" });
             MenuBars.Add(new MenuBar() { Icon = "Cog", Title = "设置", NameSpace = "SettingsView" });
+
+            // 调试输出
+            Debug.WriteLine($"MenuBars Count: {MenuBars.Count}");
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace Memo.ViewModels
         public void Configure()
         {
             UserName = AppSession.UserName; // 设置用户名
-            CreateMenuBar(); // 创建菜单栏
+            //CreateMenuBar(); // 创建菜单栏
             regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView"); // 导航到首页
         }
     }
