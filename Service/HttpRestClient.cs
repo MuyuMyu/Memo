@@ -26,8 +26,16 @@ namespace Memo.Service
         /// <param name="apiUrl">API 的基础 URL。</param>
         public HttpRestClient(string apiUrl)
         {
+
+
+
+            if (string.IsNullOrWhiteSpace(apiUrl))
+            {
+                throw new ArgumentException("Base URL cannot be null or empty", nameof(apiUrl));
+            }
+
             this.apiUrl = apiUrl; // 初始化 API URL
-            client = new RestClient(); // 创建 RestClient 实例
+            client = new RestClient(apiUrl); // 创建 RestClient 实例
         }
 
         /// <summary>
@@ -43,20 +51,37 @@ namespace Memo.Service
 
             // 如果请求参数不为空，将其序列化为 JSON 并添加到请求体
             if (baseRequest.Parameter != null)
-                request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
+                request.AddJsonBody(baseRequest.Parameter);
+            //request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
 
-            // 发送异步请求并获取响应
-            var response = await client.ExecuteAsync(request);
-            // 检查响应状态
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                return JsonConvert.DeserializeObject<ApiResponse>(response.Content); // 如果成功，反序列化响应内容为 ApiResponse 对象
-            else
-                return new ApiResponse() // 如果失败，返回包含错误信息的 ApiResponse 对象
+            // 调试输出 - 打印完整的请求 URL
+            Console.WriteLine($"Request URL: {client.BuildUri(request)}");
+
+            try
+            {
+                // 发送异步请求并获取响应
+                var response = await client.ExecuteAsync(request);
+                // 检查响应状态
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    return JsonConvert.DeserializeObject<ApiResponse>(response.Content); // 如果成功，反序列化响应内容为 ApiResponse 对象
+                else
                 {
-                    Status = false,
-                    Result = null,
-                    Message = response.ErrorMessage
-                };
+                    Console.WriteLine($"Response Status Code: {response.StatusCode}");
+                    Console.WriteLine($"Response Error Message: {response.ErrorMessage}");
+
+                    return new ApiResponse() // 如果失败，返回包含错误信息的 ApiResponse 对象
+                    {
+                        Status = false,
+                        Result = null,
+                        Message = response.ErrorMessage
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during login: {ex.Message}");
+                return new ApiResponse { Status = false, Message = "Login request failed." };
+            }
         }
 
         /// <summary>
@@ -73,7 +98,8 @@ namespace Memo.Service
 
             // 如果请求参数不为空，将其序列化为 JSON 并添加到请求体
             if (baseRequest.Parameter != null)
-                request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
+                request.AddJsonBody(baseRequest.Parameter);
+            //request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
 
             // 发送异步请求并获取响应
             var response = await client.ExecuteAsync(request);

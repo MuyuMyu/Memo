@@ -1,4 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Memo.Common;
+using Memo.Extensions;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,64 +23,60 @@ namespace Memo.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView()
+        private readonly IDialogHostService dialogHostService;
+
+        public MainView(IEventAggregator aggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
 
+            //注册提示消息
+            aggregator.ResgiterMessage(arg =>
+            {
+                Snackbar.MessageQueue.Enqueue(arg);
+            });
 
-            //最小化
+            //注册等待消息窗口
+            aggregator.Resgiter(arg =>
+            {
+                DialogHost.IsOpen = arg.IsOpen;
+
+                if (DialogHost.IsOpen)
+                    DialogHost.DialogContent = new ProgressView();
+            });
+
             btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };
-
-            //最大化
             btnMax.Click += (s, e) =>
             {
                 if (this.WindowState == WindowState.Maximized)
-                {
                     this.WindowState = WindowState.Normal;
-                    btnMax.Content = "☐";
-                }
                 else
-                {
                     this.WindowState = WindowState.Maximized;
-                    btnMax.Content = "❐";
-                }
             };
-
-            //关闭窗口
             btnClose.Click += async (s, e) =>
             {
-
+                var dialogResult = await dialogHostService.Question("温馨提示", "确认退出系统?");
+                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
                 this.Close();
             };
-
-            //拖动窗口
             ColorZone.MouseMove += (s, e) =>
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                     this.DragMove();
             };
 
-            //双击放大或缩小窗口
             ColorZone.MouseDoubleClick += (s, e) =>
             {
                 if (this.WindowState == WindowState.Normal)
-                {
                     this.WindowState = WindowState.Maximized;
-                    btnMax.Content = "❐";
-                }
                 else
-                {
                     this.WindowState = WindowState.Normal;
-                    btnMax.Content = "☐";
-                }
-                    
             };
 
             menuBar.SelectionChanged += (s, e) =>
             {
                 drawerHost.IsLeftDrawerOpen = false;
             };
-
+            this.dialogHostService = dialogHostService;
         }
     }
 }

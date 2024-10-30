@@ -14,90 +14,92 @@ namespace Memo.ViewModels.Dialogs
     /// </summary>
     public class LoginViewModel : BindableBase, IDialogAware
     {
-        private readonly ILoginService loginService; // 登录服务
-        private readonly IEventAggregator aggregator; // 事件聚合器
-        private ResgiterUserDto userDto; // 用户 DTO
-
         public LoginViewModel(ILoginService loginService, IEventAggregator aggregator)
         {
-            UserDto = new ResgiterUserDto(); // 初始化用户 DTO
-            ExecuteCommand = new DelegateCommand<string>(Execute); // 初始化命令
-            this.loginService = loginService; // 依赖注入
-            this.aggregator = aggregator; // 依赖注入
+            UserDto = new ResgiterUserDto();
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            this.loginService = loginService;
+            this.aggregator = aggregator;
         }
 
-        public string Title { get; set; } = "ToDo"; // 对话框标题
+        public string Title { get; set; } = "ToDo";
 
-        public event Action<IDialogResult> RequestClose; // 请求关闭事件
+        public event Action<IDialogResult> RequestClose;
 
-        public bool CanCloseDialog() => true; // 能否关闭对话框
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
 
-        public void OnDialogClosed() => LoginOut(); // 对话框关闭时的处理
+        public void OnDialogClosed()
+        {
+            LoginOut();
+        }
 
-        public void OnDialogOpened(IDialogParameters parameters) { } // 对话框打开时的处理
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+        }
 
         #region Login
 
-        private int selectIndex; // 选中的索引
+        private int selectIndex;
 
         public int SelectIndex
         {
             get { return selectIndex; }
-            set { selectIndex = value; RaisePropertyChanged(); } // 属性更改通知
+            set { selectIndex = value; RaisePropertyChanged(); }
         }
 
-        public DelegateCommand<string> ExecuteCommand { get; private set; } // 执行命令
 
-        private string userName; // 用户名
+        public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+
+        private string userName;
 
         public string UserName
         {
             get { return userName; }
-            set { userName = value; RaisePropertyChanged(); } // 属性更改通知
+            set { userName = value; RaisePropertyChanged(); }
         }
 
-        private string passWord; // 密码
+        private string passWord;
+        private readonly ILoginService loginService;
+        private readonly IEventAggregator aggregator;
 
         public string PassWord
         {
             get { return passWord; }
-            set { passWord = value; RaisePropertyChanged(); } // 属性更改通知
+            set { passWord = value; RaisePropertyChanged(); }
         }
 
-        /// <summary>
-        /// 执行命令，根据操作类型进行不同的逻辑处理。
-        /// </summary>
-        /// <param name="obj">操作类型</param>
         private void Execute(string obj)
         {
             switch (obj)
             {
-                case "Login": Login(); break; // 登录
-                case "LoginOut": LoginOut(); break; // 登出
-                case "Resgiter": Resgiter(); break; // 注册
-                case "ResgiterPage": SelectIndex = 1; break; // 切换到注册页
-                case "Return": SelectIndex = 0; break; // 返回到登录页
+                case "Login": Login(); break;
+                case "LoginOut": LoginOut(); break;
+                case "Resgiter": Resgiter(); break;
+                case "ResgiterPage": SelectIndex = 1; break;
+                case "Return": SelectIndex = 0; break;
             }
         }
+
+        private ResgiterUserDto userDto;
 
         public ResgiterUserDto UserDto
         {
             get { return userDto; }
-            set { userDto = value; RaisePropertyChanged(); } // 属性更改通知
+            set { userDto = value; RaisePropertyChanged(); }
         }
 
-        /// <summary>
-        /// 执行登录操作。
-        /// </summary>
         async void Login()
         {
-            // 检查用户名和密码是否为空
-            if (string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(PassWord))
+            if (string.IsNullOrWhiteSpace(UserName) ||
+                string.IsNullOrWhiteSpace(PassWord))
             {
                 return;
             }
 
-            // 调用登录服务进行登录
             var loginResult = await loginService.Login(new Shared.Dtos.UserDto()
             {
                 Account = UserName,
@@ -106,21 +108,17 @@ namespace Memo.ViewModels.Dialogs
 
             if (loginResult != null && loginResult.Status)
             {
-                RequestClose?.Invoke(new DialogResult(ButtonResult.OK)); // 登录成功，关闭对话框并返回 OK
+                RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
             }
             else
             {
-                // 登录失败提示
+                //登录失败提示...
                 aggregator.SendMessage(loginResult.Message, "Login");
             }
         }
 
-        /// <summary>
-        /// 执行注册操作。
-        /// </summary>
         private async void Resgiter()
         {
-            // 检查注册信息是否完整
             if (string.IsNullOrWhiteSpace(UserDto.Account) ||
                 string.IsNullOrWhiteSpace(UserDto.UserName) ||
                 string.IsNullOrWhiteSpace(UserDto.PassWord) ||
@@ -130,14 +128,12 @@ namespace Memo.ViewModels.Dialogs
                 return;
             }
 
-            // 检查密码是否一致
             if (UserDto.PassWord != UserDto.NewPassWord)
             {
                 aggregator.SendMessage("密码不一致,请重新输入！", "Login");
                 return;
             }
 
-            // 调用注册服务进行注册
             var resgiterResult = await loginService.Resgiter(new Shared.Dtos.UserDto()
             {
                 Account = UserDto.Account,
@@ -148,22 +144,18 @@ namespace Memo.ViewModels.Dialogs
             if (resgiterResult != null && resgiterResult.Status)
             {
                 aggregator.SendMessage("注册成功", "Login");
-                SelectIndex = 0; // 注册成功，返回登录页
+                //注册成功,返回登录页页面
+                SelectIndex = 0;
             }
             else
-            {
                 aggregator.SendMessage(resgiterResult.Message, "Login");
-            }
         }
 
-        /// <summary>
-        /// 执行登出操作。
-        /// </summary>
         void LoginOut()
         {
-            RequestClose?.Invoke(new DialogResult(ButtonResult.No)); // 返回 No 表示登出
+            RequestClose?.Invoke(new DialogResult(ButtonResult.No));
         }
-
         #endregion
+
     }
 }

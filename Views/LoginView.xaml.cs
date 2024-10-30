@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Memo.Extensions;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,23 @@ namespace Memo.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
-        public LoginView()
+        public LoginView(IEventAggregator aggregator)
         {
             InitializeComponent();
+
+            // 注册提示消息
+            aggregator.ResgiterMessage(arg =>
+            {
+                if (!string.IsNullOrEmpty(arg.Message)) // 检查消息内容是否有效
+                {
+                    LoginSnakeBar.MessageQueue.Enqueue(arg.Message);
+                }
+                else
+                {
+                    // 处理消息内容为空的情况，例如记录日志
+                    Console.WriteLine("Received a null or empty message in LoginView.");
+                }
+            }, "Login");
         }
     }
 }
