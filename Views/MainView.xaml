@@ -11,7 +11,7 @@
         xmlns:local="clr-namespace:Memo"
         xmlns:ext="clr-namespace:Memo.Extensions"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:prism="http://prismlibrary.com/"
+        xmlns:prism="http://prismlibrary.com/" xmlns:viewmodels="clr-namespace:Memo.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         Title="MainWindow"
         Width="1280"
         Height="768"
@@ -62,7 +62,7 @@
                         <TextBlock
                             Margin="0,10"
                             HorizontalAlignment="Center"
-                            Text="MuyuMyu" />
+                            Text="{Binding UserName}" />
                     </StackPanel>
 
                     <ListBox

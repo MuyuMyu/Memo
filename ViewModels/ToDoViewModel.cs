@@ -15,6 +15,7 @@ using System.Collections.ObjectModel; // 引入可观察集合
 using System.Linq; // 引入 LINQ
 using System.Text; // 引入文本功能
 using System.Threading.Tasks; // 引入异步任务功能
+using System.Windows;
 
 namespace Memo.ViewModels
 {
@@ -34,6 +35,35 @@ namespace Memo.ViewModels
             DeleteCommand = new DelegateCommand<ToDo>(Delete); // 初始化删除命令
             dialogHost = provider.Resolve<IDialogHostService>(); // 解析对话框服务
             this.service = service; // 依赖注入待办事项服务
+            CheckDeadline();
+        }
+
+        public async void CheckDeadline()
+        {
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            // 根据选中的索引设置状态过滤
+            int? Status = SelectedIndex == 0 ? null : SelectedIndex == 2 ? 1 : 0;
+
+            var todoResult = await service.GetAllFilterAsync(new ToDoParameter()
+            {
+                PageIndex = 0, // 当前页码
+                PageSize = 100, // 每页显示数量
+                Search = Search, // 搜索条件
+                Status = Status // 状态过滤
+            });
+
+            if (todoResult != null)
+            {
+                foreach (var item in todoResult.Result.Items)
+                {
+                    if (currentDate == item.UpdateDate.ToString("yyyy-MM-dd"))
+                    {
+                        MessageBox.Show("今天是" + item.Title + "的截止日期！");
+                    }
+                }
+            }
+
         }
 
         // 删除待办事项

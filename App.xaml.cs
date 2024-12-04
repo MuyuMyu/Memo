@@ -27,47 +27,6 @@ namespace Memo
     /// </summary>
     public partial class App : PrismApplication
     {
-        private readonly IToDoService service; // 待办事项服务
-
-        // 选中状态索引
-        private int selectedIndex;
-
-        /// <summary>
-        /// 下拉列表选中状态值
-        /// </summary>
-        public int SelectedIndex
-        {
-            get { return selectedIndex; }
-            set { selectedIndex = value;  }
-        }
-
-
-
-        private async void CheckDeadline()
-        {
-            var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
-
-
-
-            // 根据选中的索引设置状态过滤
-            int? Status = SelectedIndex == 0 ? null : SelectedIndex == 2 ? 1 : 0;
-
-            var todoResult = await service.GetAllFilterAsync(new ToDoParameter()
-            {
-                PageIndex = 0, // 当前页码
-                PageSize = 100, // 每页显示数量
-                Status = Status // 状态过滤
-            });
-
-            foreach (var item in todoResult.Result.Items)
-            {
-                if (currentDate == item.UpdateDate.ToString("yyyy-MM-dd"))
-                {
-                    MessageBox.Show("今天是"+item.Title+"的截止日期！");
-                }
-            }
-
-        }
 
         /// <summary>
         /// 创建并返回应用程序的主窗口（Shell）。
@@ -117,27 +76,33 @@ namespace Memo
             {
                 context.Database.EnsureCreated(); // 如果数据库不存在则创建
             }
-            // 显示登录对话框
-            var dialog = Container.Resolve<IDialogService>();
-            dialog.ShowDialog("LoginView", callback =>
-            {
-                // 如果登录失败，退出程序
-                if (callback.Result != ButtonResult.OK)
-                {
-                    Environment.Exit(0);
-                    return;
-                }
+            //// 显示登录对话框
+            //var dialog = Container.Resolve<IDialogService>();
+            //dialog.ShowDialog("LoginView", callback =>
+            //{
+            //    // 如果登录失败，退出程序
+            //    if (callback.Result != ButtonResult.OK)
+            //    {
+            //        Environment.Exit(0);
+            //        return;
+            //    }
 
-                // 登录成功后，配置主窗口的数据上下文
-                var service = App.Current.MainWindow.DataContext as IConfigureService;
-                if (service != null)
-                    service.Configure();
+            //    // 登录成功后，配置主窗口的数据上下文
+            //    var service = App.Current.MainWindow.DataContext as IConfigureService;
+            //    if (service != null)
+            //        service.Configure();
 
-                CheckDeadline();
+            //    // 调用父类的初始化方法
+            //    base.OnInitialized();
+            //});
 
-                // 调用父类的初始化方法
-                base.OnInitialized();
-            });
+            // 登录成功后，配置主窗口的数据上下文
+            var service = App.Current.MainWindow.DataContext as IConfigureService;
+            if (service != null)
+                service.Configure();
+
+            // 调用父类的初始化方法
+            base.OnInitialized();
 
         }
 

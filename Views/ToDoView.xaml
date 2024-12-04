@@ -38,9 +38,11 @@
                         Margin="20,0"
                         md:HintAssist.Hint="请输入待办概要"
                         DockPanel.Dock="Top" />
-                    <TextBox
-                        Text="{Binding CurrentDto.UpdateDate, StringFormat=yyyy-MM-dd}"
-                        Margin="20,10" md:HintAssist.Hint="请输入截止日期日期（到日）" DockPanel.Dock="Top"/>
+                    <DatePicker
+                        SelectedDate="{Binding Model.UpdateDate}"
+                        Margin="20,10"
+                        md:HintAssist.Hint="请选择截止日期"
+                        DockPanel.Dock="Top"/>
                     <TextBox  Text="{Binding CurrentDto.Content}"
                         MinHeight="100"
                         Margin="20"
