@@ -76,7 +76,7 @@ namespace Memo.Service
         /// </summary>
         /// <param name="parameter">包含分页和过滤条件的参数。</param>
         /// <returns>返回 ApiResponse 包含待办事项分页列表。</returns>
-        public async Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter)
+        public async Task<ApiResponse<PagedList<ToDo>>> GetAllFilterAsync(ToDoParameter parameter)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Memo.Service
                 var items = await query
                     .Skip((parameter.PageIndex - 1) * parameter.PageSize)
                     .Take(parameter.PageSize)
-                    .Select(t => new ToDoDto
+                    .Select(t => new ToDo
                     {
                         Id = t.Id,
                         Title = t.Title,
@@ -108,7 +108,7 @@ namespace Memo.Service
                     })
                     .ToListAsync();
 
-                var pagedList = new PagedList<ToDoDto>
+                var pagedList = new PagedList<ToDo>
                 {
                     Items = items,
                     PageIndex = parameter.PageIndex,
@@ -116,11 +116,11 @@ namespace Memo.Service
                     TotalCount = totalCount
                 };
 
-                return new ApiResponse<PagedList<ToDoDto>> { Status = true, Result = pagedList };
+                return new ApiResponse<PagedList<ToDo>> { Status = true, Result = pagedList };
             }
             catch (Exception ex)
             {
-                return new ApiResponse<PagedList<ToDoDto>> { Status = false, Message = ex.Message };
+                return new ApiResponse<PagedList<ToDo>> { Status = false, Message = ex.Message };
             }
         }
 

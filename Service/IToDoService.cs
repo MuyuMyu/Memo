@@ -26,7 +26,7 @@ namespace Memo.Service
         /// </summary>
         /// <param name="parameter">用于过滤和分页的待办事项参数。</param>
         /// <returns>包含过滤后的待办事项的分页结果。</returns>
-        Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter);
+        Task<ApiResponse<PagedList<ToDo>>> GetAllFilterAsync(ToDoParameter parameter);
 
         /// <summary>
         /// 获取待办事项的汇总信息。

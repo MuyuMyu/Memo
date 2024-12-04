@@ -47,7 +47,8 @@ namespace Memo.ViewModels.Dialogs
         {
             // 验证待办事项标题和内容是否为空
             if (string.IsNullOrWhiteSpace(Model.Title) ||
-                string.IsNullOrWhiteSpace(model.Content)) return;
+                string.IsNullOrWhiteSpace(model.Content)
+                ) return;
 
             // 检查对话框是否打开，如果是则返回 OK 和编辑的待办事项
             if (DialogHost.IsDialogOpen(DialogHostName))

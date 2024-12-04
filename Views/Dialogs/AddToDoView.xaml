@@ -33,6 +33,10 @@
                 Text="{Binding Model.Title}"
                 Margin="20,0" md:HintAssist.Hint="请输入待办概要" DockPanel.Dock="Top"/>
 
+            <TextBox
+                Text="{Binding Model.UpdateDate, StringFormat=yyyy-MM-dd}"
+                Margin="20,10" md:HintAssist.Hint="请输入截止日期日期（到日）" DockPanel.Dock="Top"/>
+
             <TextBox Margin="20,10" 
                      MinHeight="100"  Text="{Binding Model.Content}"
                      AcceptsReturn="True"

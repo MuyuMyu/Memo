@@ -117,7 +117,7 @@ namespace Memo.ViewModels
         {
             UserName = AppSession.UserName; // 设置用户名
             CreateMenuBar(); // 创建菜单栏
-            //regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView"); // 导航到首页
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView"); // 导航到首页
         }
     }
 }

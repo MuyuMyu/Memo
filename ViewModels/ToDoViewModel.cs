@@ -28,16 +28,16 @@ namespace Memo.ViewModels
         public ToDoViewModel(IToDoService service, IContainerProvider provider)
             : base(provider)
         {
-            ToDoDtos = new ObservableCollection<ToDoDto>(); // 初始化待办事项集合
+            ToDoDtos = new ObservableCollection<ToDo>(); // 初始化待办事项集合
             ExecuteCommand = new DelegateCommand<string>(Execute); // 初始化执行命令
-            SelectedCommand = new DelegateCommand<ToDoDto>(Selected); // 初始化选择命令
-            DeleteCommand = new DelegateCommand<ToDoDto>(Delete); // 初始化删除命令
+            SelectedCommand = new DelegateCommand<ToDo>(Selected); // 初始化选择命令
+            DeleteCommand = new DelegateCommand<ToDo>(Delete); // 初始化删除命令
             dialogHost = provider.Resolve<IDialogHostService>(); // 解析对话框服务
             this.service = service; // 依赖注入待办事项服务
         }
 
         // 删除待办事项
-        private async void Delete(ToDoDto obj)
+        private async void Delete(ToDo obj)
         {
             try
             {
@@ -107,12 +107,12 @@ namespace Memo.ViewModels
         }
 
         // 当前待办事项对象
-        private ToDoDto currentDto;
+        private ToDo currentDto;
 
         /// <summary>
         /// 编辑选中/新增时对象
         /// </summary>
-        public ToDoDto CurrentDto
+        public ToDo CurrentDto
         {
             get { return currentDto; }
             set { currentDto = value; RaisePropertyChanged(); }
@@ -123,12 +123,12 @@ namespace Memo.ViewModels
         /// </summary>
         private void Add()
         {
-            CurrentDto = new ToDoDto(); // 初始化新的待办事项
+            CurrentDto = new ToDo(); // 初始化新的待办事项
             IsRightDrawerOpen = true; // 打开编辑窗口
         }
 
         // 选中待办事项
-        private async void Selected(ToDoDto obj)
+        private async void Selected(ToDo obj)
         {
             try
             {
@@ -136,7 +136,13 @@ namespace Memo.ViewModels
                 var todoResult = await service.GetFirstOfDefaultAsync(obj.Id); // 获取待办事项详情
                 if (todoResult.Status)
                 {
-                    CurrentDto = todoResult.Result; // 设置当前待办事项
+                    ToDo NewT = new ToDo();
+                    NewT.Title = CurrentDto.Title;
+                    NewT.Content = CurrentDto.Content;
+                    NewT.UpdateDate = CurrentDto.UpdateDate;
+                    NewT.Status = CurrentDto.Status;
+
+                    CurrentDto = NewT; // 设置当前待办事项
                     IsRightDrawerOpen = true; // 打开编辑窗口
                 }
             }
@@ -167,6 +173,7 @@ namespace Memo.ViewModels
                     ToDo NewT = new ToDo();
                     NewT.Title = CurrentDto.Title;
                     NewT.Content = CurrentDto.Content;
+                    NewT.UpdateDate = CurrentDto.UpdateDate;
                     NewT.Status = CurrentDto.Status;
 
                     var updateResult = await service.UpdateAsync(NewT); // 调用服务更新待办事项
@@ -187,12 +194,15 @@ namespace Memo.ViewModels
                     ToDo NewT = new ToDo();
                     NewT.Title = CurrentDto.Title;
                     NewT.Content = CurrentDto.Content;
+                    NewT.UpdateDate = CurrentDto.UpdateDate;
                     NewT.Status = CurrentDto.Status;
 
 
                     var addResult = await service.AddAsync(NewT); // 调用服务添加待办事项
                     if (addResult.Status)
                     {
+
+
                         ToDoDtos.Add(CurrentDto); // 添加到集合
                         IsRightDrawerOpen = false; // 关闭编辑窗口
                     }
@@ -210,13 +220,13 @@ namespace Memo.ViewModels
 
         // 命令定义
         public DelegateCommand<string> ExecuteCommand { get; private set; }
-        public DelegateCommand<ToDoDto> SelectedCommand { get; private set; }
-        public DelegateCommand<ToDoDto> DeleteCommand { get; private set; }
+        public DelegateCommand<ToDo> SelectedCommand { get; private set; }
+        public DelegateCommand<ToDo> DeleteCommand { get; private set; }
 
-        private ObservableCollection<ToDoDto> toDoDtos; // 待办事项集合
+        private ObservableCollection<ToDo> toDoDtos; // 待办事项集合
         private readonly IToDoService service; // 待办事项服务
 
-        public ObservableCollection<ToDoDto> ToDoDtos
+        public ObservableCollection<ToDo> ToDoDtos
         {
             get { return toDoDtos; }
             set { toDoDtos = value; RaisePropertyChanged(); }
@@ -245,11 +255,7 @@ namespace Memo.ViewModels
                 ToDoDtos.Clear(); // 清空集合
                 foreach (var item in todoResult.Result.Items)
                 {
-                    ToDo NewT = new ToDo();
-                    NewT.Title = item.Title;
-                    NewT.Content = item.Content;
-                    NewT.Status = item.Status;
-                    ToDoDtos.Add(CurrentDto); // 添加待办事项到集合
+                    ToDoDtos.Add(item); // 添加待办事项到集合
                 }
             }
             UpdateLoading(false); // 恢复加载状态

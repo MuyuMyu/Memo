@@ -1,6 +1,8 @@
 ﻿using Memo.Context;
 using Memo.Shared.Contact;
 using Memo.Shared.Dtos;  // 引用 MemoDto 类型
+using Memo.Shared.Parameters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +70,40 @@ namespace Memo.Service
             catch (Exception ex)
             {
                 return new ApiResponse<Context.Memo> { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<ApiResponse<PagedList<Context.Memo>>> GetAllAsync(QueryParameter parameter)
+        {
+            try
+            {
+                var query = context.Set<Context.Memo>().AsQueryable();
+
+                // 搜索处理
+                if (!string.IsNullOrEmpty(parameter.Search))
+                {
+                    query = query.Where(e => e.ToString().Contains(parameter.Search)); // 假设所有实体都有一个 ToString() 方法
+                }
+
+                // 分页处理
+                var totalItems = await query.CountAsync();
+                var items = await query.Skip((parameter.PageIndex - 1) * parameter.PageSize)
+                                       .Take(parameter.PageSize)
+                                       .ToListAsync();
+
+                var pagedList = new PagedList<Context.Memo>
+                {
+                    Items = items,
+                    TotalCount = totalItems,
+                    PageIndex = parameter.PageIndex,
+                    PageSize = parameter.PageSize
+                };
+
+                return new ApiResponse<PagedList<Context.Memo>> { Status = true, Result = pagedList };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<PagedList<Context.Memo>> { Status = false, Message = ex.Message };
             }
         }
     }

@@ -24,20 +24,20 @@ namespace Memo.ViewModels
     {
         private readonly IDialogHostService dialogHost; // 对话框服务
         private readonly IMemoService service; // 备忘录服务
-        private ObservableCollection<MemoDto> memoDtos; // 备忘录 DTO 集合
+        private ObservableCollection<Context.Memo> memoDtos; // 备忘录 DTO 集合
 
         public MemoViewModel(IMemoService service, IContainerProvider provider)
            : base(provider)
         {
-            MemoDtos = new ObservableCollection<MemoDto>(); // 初始化备忘录 DTO 集合
+            MemoDtos = new ObservableCollection<Context.Memo>(); // 初始化备忘录 DTO 集合
             ExecuteCommand = new DelegateCommand<string>(Execute); // 初始化执行命令
-            SelectedCommand = new DelegateCommand<MemoDto>(Selected); // 初始化选中命令
-            DeleteCommand = new DelegateCommand<MemoDto>(Delete); // 初始化删除命令
+            SelectedCommand = new DelegateCommand<Context.Memo>(Selected); // 初始化选中命令
+            DeleteCommand = new DelegateCommand<Context.Memo>(Delete); // 初始化删除命令
             dialogHost = provider.Resolve<IDialogHostService>(); // 解析对话框服务
             this.service = service; // 依赖注入备忘录服务
         }
 
-        private async void Delete(MemoDto obj)
+        private async void Delete(Context.Memo obj)
         {
             try
             {
@@ -93,12 +93,12 @@ namespace Memo.ViewModels
             set { isRightDrawerOpen = value; RaisePropertyChanged(); } // 属性更改通知
         }
 
-        private MemoDto currentDto; // 当前编辑的备忘录 DTO
+        private Context.Memo currentDto; // 当前编辑的备忘录 DTO
 
         /// <summary>
         /// 编辑选中/新增时对象
         /// </summary>
-        public MemoDto CurrentDto
+        public Context.Memo CurrentDto
         {
             get { return currentDto; }
             set { currentDto = value; RaisePropertyChanged(); } // 属性更改通知
@@ -109,11 +109,11 @@ namespace Memo.ViewModels
         /// </summary>
         private void Add()
         {
-            CurrentDto = new MemoDto(); // 创建新的备忘录对象
+            CurrentDto = new Context.Memo(); // 创建新的备忘录对象
             IsRightDrawerOpen = true; // 打开右侧编辑窗口
         }
 
-        private async void Selected(MemoDto obj)
+        private async void Selected(Context.Memo obj)
         {
             try
             {
@@ -121,7 +121,12 @@ namespace Memo.ViewModels
                 var todoResult = await service.GetFirstOfDefaultAsync(obj.Id); // 获取选中的备忘录
                 if (todoResult.Status)
                 {
-                    CurrentDto = todoResult.Result; // 设置当前 DTO
+                    Context.Memo NewM = new Context.Memo();
+                    NewM.Id = todoResult.Result.Id;
+                    NewM.Content = todoResult.Result.Content;
+                    NewM.Title = todoResult.Result.Title;
+
+                    CurrentDto = NewM; // 设置当前 DTO
                     IsRightDrawerOpen = true; // 打开右侧编辑窗口
                 }
             }
@@ -166,7 +171,11 @@ namespace Memo.ViewModels
                     var addResult = await service.AddAsync(CurrentDto); // 调用添加服务
                     if (addResult.Status)
                     {
-                        MemoDtos.Add(addResult.Result); // 将新备忘录添加到集合中
+                        Context.Memo NewM = new Context.Memo();
+                        NewM.Content = addResult.Result.Content;
+                        NewM.Title = addResult.Result.Title;
+
+                        MemoDtos.Add(NewM); // 将新备忘录添加到集合中
                         IsRightDrawerOpen = false; // 关闭右侧编辑窗口
                     }
                 }
@@ -183,10 +192,10 @@ namespace Memo.ViewModels
 
         // 命令定义
         public DelegateCommand<string> ExecuteCommand { get; private set; }
-        public DelegateCommand<MemoDto> SelectedCommand { get; private set; }
-        public DelegateCommand<MemoDto> DeleteCommand { get; private set; }
+        public DelegateCommand<Context.Memo> SelectedCommand { get; private set; }
+        public DelegateCommand<Context.Memo> DeleteCommand { get; private set; }
 
-        public ObservableCollection<MemoDto> MemoDtos
+        public ObservableCollection<Context.Memo> MemoDtos
         {
             get { return memoDtos; }
             set { memoDtos = value; RaisePropertyChanged(); } // 属性更改通知
@@ -211,6 +220,8 @@ namespace Memo.ViewModels
                 MemoDtos.Clear(); // 清空当前备忘录集合
                 foreach (var item in todoResult.Result.Items)
                 {
+
+
                     MemoDtos.Add(item); // 添加新获取的备忘录
                 }
             }

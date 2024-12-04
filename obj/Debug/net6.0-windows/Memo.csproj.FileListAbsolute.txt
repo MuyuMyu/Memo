@@ -217,8 +217,6 @@ E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\runtimes\win-arm\native\e_sq
 E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\runtimes\win-arm64\native\e_sqlite3.dll
 E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\runtimes\win-x86\native\e_sqlite3.dll
-E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\Memo.Shared.dll
-E:\MyProject\MemoTest\Memo\bin\Debug\net6.0-windows\Memo.Shared.pdb
 E:\MyProject\MemoTest\Memo\obj\Debug\net6.0-windows\Memo.csproj.AssemblyReference.cache
 E:\MyProject\MemoTest\Memo\obj\Debug\net6.0-windows\Views\AboutView.g.cs
 E:\MyProject\MemoTest\Memo\obj\Debug\net6.0-windows\Views\Dialogs\AddMemoView.g.cs

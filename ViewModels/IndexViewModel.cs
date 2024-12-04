@@ -14,6 +14,7 @@ using Prism.Regions; // 引入 Prism 的区域管理
 using Memo.Service; // 引入服务层
 using Prism.Ioc; // 引入 Prism 的 IoC 容器
 using Prism.Services.Dialogs; // 引入 Prism 的对话框服务
+using Memo.Context;
 
 namespace Memo.ViewModels
 {
@@ -41,9 +42,9 @@ namespace Memo.ViewModels
             this.dialog = dialog;
 
             // 初始化编辑命令
-            EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
-            EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
-            ToDoCompltedCommand = new DelegateCommand<ToDoDto>(Complted);
+            EditMemoCommand = new DelegateCommand<Context.Memo>(AddMemo);
+            EditToDoCommand = new DelegateCommand<ToDo>(AddToDo);
+            ToDoCompltedCommand = new DelegateCommand<ToDo>(Complted);
             NavigateCommand = new DelegateCommand<TaskBar>(Navigate);
         }
 
@@ -70,7 +71,7 @@ namespace Memo.ViewModels
         /// 标记待办事项为完成。
         /// </summary>
         /// <param name="obj">待办事项对象</param>
-        private async void Complted(ToDoDto obj)
+        private async void Complted(ToDo obj)
         {
             try
             {
@@ -96,9 +97,9 @@ namespace Memo.ViewModels
         }
 
         // 命令定义
-        public DelegateCommand<ToDoDto> ToDoCompltedCommand { get; private set; }
-        public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
-        public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
+        public DelegateCommand<ToDo> ToDoCompltedCommand { get; private set; }
+        public DelegateCommand<ToDo> EditToDoCommand { get; private set; }
+        public DelegateCommand<Context.Memo> EditMemoCommand { get; private set; }
         public DelegateCommand<string> ExecuteCommand { get; private set; }
         public DelegateCommand<TaskBar> NavigateCommand { get; private set; }
 
@@ -150,7 +151,7 @@ namespace Memo.ViewModels
         /// 添加待办事项。
         /// </summary>
         /// <param name="model">待办事项模型</param>
-        async void AddToDo(ToDoDto model)
+        async void AddToDo(ToDo model)
         {
             DialogParameters param = new DialogParameters();
             if (model != null)
@@ -183,8 +184,13 @@ namespace Memo.ViewModels
                         var addResult = await toDoService.AddAsync(todo); // 添加待办事项
                         if (addResult.Status)
                         {
+                            ToDo NewT = new ToDo();
+                            NewT.Title = addResult.Result.Title;
+                            NewT.Content = addResult.Result.Content;
+                            NewT.Status = addResult.Result.Status;
+
                             summary.Sum += 1; // 更新总数
-                            summary.ToDoList.Add(addResult.Result); // 添加到列表
+                            summary.ToDoList.Add(NewT); // 添加到列表
                             summary.CompletedRatio = (summary.CompletedCount / (double)summary.Sum).ToString("0%"); // 更新完成比例
                             this.Refresh(); // 刷新视图
                         }
@@ -201,7 +207,7 @@ namespace Memo.ViewModels
         /// 添加备忘录。
         /// </summary>
         /// <param name="model">备忘录模型</param>
-        async void AddMemo(MemoDto model)
+        async void AddMemo(Context.Memo model)
         {
             DialogParameters param = new DialogParameters();
             if (model != null)
@@ -213,7 +219,7 @@ namespace Memo.ViewModels
                 try
                 {
                     UpdateLoading(true); // 更新加载状态
-                    var memo = dialogResult.Parameters.GetValue<MemoDto>("Value"); // 获取返回的备忘录
+                    var memo = dialogResult.Parameters.GetValue<Context.Memo>("Value"); // 获取返回的备忘录
 
                     if (memo.Id > 0) // 如果是更新操作
                     {
